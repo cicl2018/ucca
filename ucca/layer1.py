@@ -14,7 +14,7 @@ import operator
 
 from ucca import core, layer0
 
-LAYER_ID = '1'
+LAYER_ID = 1
 
 
 class NodeTags:
@@ -425,7 +425,7 @@ class Layer1(core.Layer):
     def next_id(self):
         """Returns the next available ID string for this layer."""
         for n in itertools.count(start=len(self._all) + 1):
-            id_str = "{}{}{}".format(LAYER_ID, core.Node.ID_SEPARATOR, n)
+            id_str = (LAYER_ID, n)
             try:
                 self._root.by_id(id_str)
             except KeyError:

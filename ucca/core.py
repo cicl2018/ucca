@@ -30,8 +30,7 @@ def id_orderkey(node):
         first order lexicography the layer ID then numerically the unique ID.
 
     """
-    layer, unique = node.ID.split(Node.ID_SEPARATOR)
-    return "{} {:>{}}".format(layer, unique, UNIQUE_ID_MAX_DIGITS)
+    return node.ID
 
 
 def edge_id_orderkey(edge):
@@ -441,7 +440,7 @@ class Node:
 
     @property
     def layer(self):
-        return self._root.layer(self._ID.split(Node.ID_SEPARATOR)[0])
+        return self._root.layer(self._ID[0])
 
     @property
     def incoming(self):
@@ -469,7 +468,7 @@ class Node:
         return self._outgoing[index]
 
     def __repr__(self):
-        return Node.__name__ + "(" + self.ID + ")"
+        return Node.__name__ + "(" + "{}.{}".format(*self.ID) + ")"
 
     @ModifyPassage
     def add_multiple(self, edge_categories, node, *, edge_attrib=None):

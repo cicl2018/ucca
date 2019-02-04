@@ -10,7 +10,7 @@ Layer 0 has only one type of node, :class:`Terminal`. This is a subtype of
 
 from ucca import core
 
-LAYER_ID = '0'
+LAYER_ID = 0
 
 
 class NodeTags:
@@ -53,7 +53,7 @@ class Terminal(core.Node):
     @property
     def position(self):
         # the format of ID is LAYER_ID + ID separator + position
-        return int(self.ID[len(LAYER_ID) + len(core.Node.ID_SEPARATOR):])
+        return self.ID[1]
 
     @property
     def para_pos(self):
@@ -116,7 +116,7 @@ class Terminal(core.Node):
 
     def __hash__(self):
         """Hashes the Terminals according to its ID and text."""
-        return hash(self.ID + str(self.text))
+        return hash(str(self.ID) + str(self.text))
 
     def __str__(self):
         return self.text
@@ -177,7 +177,7 @@ class Layer0(core.Layer):
         position = len(self._all) + 1  # we want positions to start with 1
         para_pos = self._all[-1].para_pos + 1 if position > 1 and paragraph == self._all[-1].paragraph else 1
         tag = NodeTags.Punct if punct else NodeTags.Word
-        return Terminal(ID="{}{}{}".format(LAYER_ID, core.Node.ID_SEPARATOR, position),
+        return Terminal(ID=(LAYER_ID, position),
                         root=self.root, tag=tag,
                         attrib={'text': text,
                                 'paragraph': paragraph,
