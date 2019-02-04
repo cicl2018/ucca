@@ -602,17 +602,17 @@ def to_standard(passage):
     _add_extra(passage, root)
 
     for layer in sorted(passage.layers, key=attrgetter('ID')):
-        layer_elem = ET.SubElement(root, 'layer', layerID=layer.ID)
+        layer_elem = ET.SubElement(root, 'layer', layerID=str(layer.ID))
         _add_attrib(layer, layer_elem)
         _add_extra(layer, layer_elem)
         for node in layer.all:
             node_elem = ET.SubElement(layer_elem, 'node',
-                                      ID=node.ID, type=node.tag)
+                                      ID="{}.{}".format(*node.ID), type=node.tag)
             _add_attrib(node, node_elem)
             _add_extra(node, node_elem)
             for edge in node:
                 edge_elem = ET.SubElement(node_elem, 'edge',
-                                          toID=edge.child.ID, type=edge.tag)
+                                          toID="{}.{}".format(*edge.child.ID), type=edge.tag)
                 _add_attrib(edge, edge_elem)
                 _add_extra(edge, edge_elem)
     return root
@@ -1100,6 +1100,8 @@ def passage2file(passage, filename, indent=True, binary=False):
             pickle.dump(passage, h)
     else:  # xml
         root = to_standard(passage)
+        import IPython;
+        IPython.embed()
         xml_string = ET.tostring(root).decode()
         output = textutil.indent_xml(xml_string) if indent else xml_string
         with open(filename, "w", encoding="utf-8") as h:
